@@ -13,6 +13,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xFF186F65),
+        textTheme: const TextTheme(
+          labelLarge: TextStyle(fontSize: 18),
+        ),
       ),
       home: const MyHomePage(),
     );
@@ -31,6 +34,29 @@ class _MyHomePageState extends State<MyHomePage> {
   var emailController = TextEditingController();
   var addressController = TextEditingController();
   var phoneController = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+
+  mySnackBar(context, message) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontSize: 19,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -56,171 +82,219 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SizedBox(
-                child: Form(
-                  child: TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.person_outline,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      labelText: 'Name',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    child: TextFormField(
+                      controller: nameController,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '*Required';
+                        }
+                        if (value.length > 30) {
+                          return 'Enter 30 Character';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.person_outline,
                           color: Theme.of(context).primaryColor,
-                          width: 2,
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 2,
+                        labelText: 'Name',
+                        labelStyle: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SizedBox(
-                child: Form(
-                  child: TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      labelText: 'Email',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    child: TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '*Required';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
                           color: Theme.of(context).primaryColor,
-                          width: 2,
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 2,
+                        labelText: 'Email',
+                        labelStyle: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SizedBox(
-                child: Form(
-                  child: TextFormField(
-                    controller: addressController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.home_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      labelText: 'Address',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    child: TextFormField(
+                      controller: addressController,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '*Required';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.home_outlined,
                           color: Theme.of(context).primaryColor,
-                          width: 2,
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 2,
+                        labelText: 'Address',
+                        labelStyle: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SizedBox(
-                child: Form(
-                  child: TextFormField(
-                    controller: phoneController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.phone_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      labelText: 'Phone Number',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    child: TextFormField(
+                      controller: phoneController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.phone_outlined,
                           color: Theme.of(context).primaryColor,
-                          width: 2,
+                        ),
+                        labelText: 'Phone Number',
+                        labelStyle: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          ),
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.red,
-                          width: 2,
-                        ),
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '*Required';
+                        }
+                        if (value.length > 11) {
+                          return 'Enter 11 digits';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 55,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _submit();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      elevation: 15,
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-            SizedBox(
-              height: 55,
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 15,
-                ),
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  void _submit() async {
+    if (formKey.currentState!.validate()) {
+      String name = nameController.text.toString();
+      String email = emailController.text.toString();
+      String address = addressController.text.toString();
+      String phone = phoneController.text.toString();
+      nameController.clear();
+      emailController.clear();
+      addressController.clear();
+      phoneController.clear();
+      mySnackBar(context, '$name\n$email\n$address\n$phone');
+    }
   }
 }
